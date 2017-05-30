@@ -17,7 +17,6 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(exception.Message == $"Invalid Number Of Lights ({numberOfLight}). State Needs At Least One Light.");
     }
 
-
     [TestCase(1, TestName = "State with 1 light.")]
     [TestCase(2, TestName = "State with 2 light.")]
     [TestCase(3, TestName = "State with 3 light.")]
@@ -25,7 +24,14 @@ namespace TrafficMonitor.Tests
     public void Lights_GivenArgument_ExpectCorrespondingNumberOfLights(int value)
     {
       //Arrange && Act && Assert
-      Assert.IsTrue(new State(value).Lights.Count() == value);
+      Assert.IsTrue(new State(value).Lights.Count == value);
     }
+
+    [Test]
+    public void LightPairing_GivenArgumentFour_ExpectTrueForAll()
+    {
+      //Arrange && Act && Assert
+      Assert.IsTrue(new State(4).Lights.All(light => light.Twin != null));
+    } 
   }
 }
