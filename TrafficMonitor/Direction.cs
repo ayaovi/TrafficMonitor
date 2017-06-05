@@ -2,17 +2,17 @@
 {
   public enum Direction
   {
+    NorthWest,
     NorthNorth,
     NorthEast,
-    NorthWest,
-    SouthSouth,
     SouthEast,
+    SouthSouth,
     SouthWest,
-    EastEast,
-    EastNorth,
-    EastSouth,
+    WestSouth,
     WestWest,
     WestNorth,
-    WestSouth,
+    EastNorth,
+    EastEast,
+    EastSouth
   }
 }
