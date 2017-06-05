@@ -18,7 +18,7 @@ namespace TrafficMonitor
       Position = position;
     }
 
-    public Colour Colour { get; }
+    public Colour Colour { get; set; }
     public Position Position { get; }
     public Light Twin { get; set; }
   }
