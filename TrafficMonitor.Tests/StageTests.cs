@@ -36,10 +36,10 @@ namespace TrafficMonitor.Tests
     }
 
     [Test]
-    public void Phases_GivenStageOne_ExpectTwo()
+    public void Phases_GivenStageOne_ExpectFour()
     {
       //Arrange && Act && Assert
-      Assert.IsTrue(new Stage(1).Phases.Count == 2);
+      Assert.IsTrue(new Stage(1).Phases.Count == 4);
     }
 
     [Test]
@@ -77,8 +77,10 @@ namespace TrafficMonitor.Tests
       switch (number)
       {
         case 1:
-          Phases.Add(new Phase('A'));
-          Phases.Add(new Phase('B'));
+          Phases.Add(new Phase(PhaseName.A));
+          Phases.Add(new Phase(PhaseName.B));
+          Phases.Add(new Phase(PhaseName.D));
+          Phases.Add(new Phase(PhaseName.E));
           break;
       }
     }
@@ -92,13 +94,10 @@ namespace TrafficMonitor.Tests
 
       foreach (var phase in Phases)
       {
-        foreach (var direction in phase.Directions)
-        {
-          if (direction.ToString().StartsWith("North")) Lights[0].Colour = Colour.Green;
-          else if (direction.ToString().StartsWith("East")) Lights[1].Colour = Colour.Green;
-          else if (direction.ToString().StartsWith("West")) Lights[2].Colour = Colour.Green;
-          else if (direction.ToString().StartsWith("South")) Lights[3].Colour = Colour.Green;
-        }
+          if (phase.Direction.ToString().StartsWith("North")) Lights[0].Colour = Colour.Green;
+          else if (phase.Direction.ToString().StartsWith("East")) Lights[1].Colour = Colour.Green;
+          else if (phase.Direction.ToString().StartsWith("West")) Lights[2].Colour = Colour.Green;
+          else if (phase.Direction.ToString().StartsWith("South")) Lights[3].Colour = Colour.Green;
       }
       IsActive = true;
     }

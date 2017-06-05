@@ -4,29 +4,21 @@ namespace TrafficMonitor
 {
   public class Phase
   {
-    public Phase(IList<Direction> directions)
+    public Phase(Direction direction)
     {
-      Directions = directions;
+      Direction = direction;
+      PhaseName = (PhaseName)direction;
       IsActive = false;
     }
 
-    public Phase(char index)
+    public Phase(PhaseName phaseName)
     {
-      Directions = new List<Direction>();
-      switch (index)
-      {
-        case 'A':
-          Directions.Add(Direction.NorthNorth);
-          Directions.Add(Direction.NorthWest);
-          break;
-        case 'B':
-          Directions.Add(Direction.SouthSouth);
-          Directions.Add(Direction.SouthEast);
-          break;
-      }
+      PhaseName = phaseName;
+      Direction = (Direction)phaseName;
     }
 
-    public IList<Direction> Directions { get; }
+    public Direction Direction { get; }
     public bool IsActive { get; set; }
+    public PhaseName PhaseName { get; }
   }
 }

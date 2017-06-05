@@ -6,29 +6,39 @@ namespace TrafficMonitor.Tests
   [TestFixture]
   class PhaseTests
   {
-    [TestCase(new[] { Direction.EastEast }, TestName = "EastEast")]
-    [TestCase(new[] { Direction.NorthEast }, TestName = "NorthEast")]
-    [TestCase(new[] { Direction.SouthEast }, TestName = "SouthEast")]
-    public void DirectionUponCreation_GivenListOfDirectionsArgument_ExpectSame(IList<Direction> direction)
+    [TestCase(10, TestName = "EastEast")]
+    [TestCase(2, TestName = "NorthEast")]
+    [TestCase(3, TestName = "SouthEast")]
+    public void DirectionUponCreation_GivenDirectionsArgument_ExpectSame(Direction direction)
     {
-      //Arrange && Act && Assert
-      Assert.IsTrue(new Phase(direction).Directions.Count == direction.Count);
+      //Arrange
+      var phase = new Phase(direction);
+
+      //Act && Assert
+      Assert.IsTrue(phase.Direction == direction);
+      Assert.IsTrue(phase.PhaseName == (PhaseName)direction);
     }
 
-    [TestCase(new[] { Direction.EastEast }, TestName = "EastEast")]
-    [TestCase(new[] { Direction.NorthEast }, TestName = "NorthEast")]
-    [TestCase(new[] { Direction.SouthEast }, TestName = "SouthEast")]
-    public void IsActive_UponCreation_ShouldBeFalse(IList<Direction> direction)
+    [TestCase(Direction.EastEast, TestName = "EastEast")]
+    [TestCase(Direction.NorthEast, TestName = "NorthEast")]
+    [TestCase(Direction.SouthEast, TestName = "SouthEast")]
+    public void IsActive_UponCreation_ShouldBeFalse(Direction direction)
     {
       //Arrange && Act && Assert
       Assert.IsTrue(new Phase(direction).IsActive == false);
     }
 
-    [Test]
-    public void DirectionsUponCreation_GivenNameArgument_ExpectResult()
+    [TestCase(10, TestName = "EastEast")]
+    [TestCase(2, TestName = "NorthEast")]
+    [TestCase(3, TestName = "SouthEast")]
+    public void DirectionsUponCreation_GivenPhaseNameArgument_ExpectResult(PhaseName phaseName)
     {
-      //Arrange && Act && Assert
-      Assert.IsTrue(new Phase('A').Directions.Count == 2);
+      //Arrange
+      var phase = new Phase(phaseName);
+
+      //Act && Assert
+      Assert.IsTrue(phase.Direction == (Direction)phaseName);
+      Assert.IsTrue(phase.PhaseName == phaseName);
     }
   }
 }
