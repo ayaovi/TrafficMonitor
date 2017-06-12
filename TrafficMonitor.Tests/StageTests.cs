@@ -34,12 +34,26 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(new Stage().Phases.Count == 0);
     }
 
-    [TestCase(1, 4)]
-    [TestCase(2, 4)]
+    [TestCase(1, 2)]
+    [TestCase(2, 2)]
     public void Phases_GivenCertainStage_ExpectAppropriateNumberOfPhases(int stageIndex, int numberOfPhases)
     {
       //Arrange && Act && Assert
       Assert.IsTrue(new Stage(stageIndex).Phases.Count == numberOfPhases);
+    }
+
+    [Test]
+    public void Activate_GivenStateZero_ExpectAllLightShouldBeRed()
+    {
+      //Arrange
+      var stage = new Stage(0);
+
+      //Act
+      stage.Activate();
+
+      //Assert
+      Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
+      Assert.IsTrue(stage.IsActive);
     }
 
     [Test]
@@ -74,6 +88,20 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(stage.Lights[2].Colour == Colour.Green);
       Assert.IsTrue(stage.Lights[3].Colour == Colour.Red);
       Assert.IsTrue(stage.IsActive);
+    }
+
+    [Test]
+    public void Equals_GivenSameStage_ExpectTrue()
+    {
+      //Arrange && Act && Assert
+      Assert.IsTrue(new Stage(1).Equals(new Stage(1)));
+    }
+
+    [Test]
+    public void Equals_GivenDifferentStage_ExpectFalse()
+    {
+      //Arrange && Act && Assert
+      Assert.IsFalse(new Stage(0).Equals(new Stage(2)));
     }
   }
 }

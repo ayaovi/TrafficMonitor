@@ -8,6 +8,7 @@ namespace TrafficMonitor
     public IList<Light> Lights { get; }
     public IList<Phase> Phases { get; }
     public bool IsActive { get; set; }
+    public Stage Next { get; set; }
 
     public Stage()
     {
@@ -39,12 +40,24 @@ namespace TrafficMonitor
 
       foreach (var phase in Phases)
       {
-        if (phase.Direction.ToString().StartsWith("North")) Lights[0].Colour = Colour.Green;
-        else if (phase.Direction.ToString().StartsWith("East")) Lights[1].Colour = Colour.Green;
-        else if (phase.Direction.ToString().StartsWith("West")) Lights[2].Colour = Colour.Green;
-        else if (phase.Direction.ToString().StartsWith("South")) Lights[3].Colour = Colour.Green;
+        if (phase.PhaseName == PhaseName.A) Lights[0].Colour = Colour.Green;
+        else if (phase.PhaseName == PhaseName.C) Lights[1].Colour = Colour.Green;
+        else if (phase.PhaseName == PhaseName.D) Lights[2].Colour = Colour.Green;
+        else if (phase.PhaseName == PhaseName.B) Lights[3].Colour = Colour.Green;
       }
       IsActive = true;
+    }
+
+    public override bool Equals(object obj)
+    {
+      // Check for null values and compare run-time types.
+      if (obj == null || GetType() != obj.GetType())
+        return false;
+
+      var stage = (Stage)obj;
+      return Lights.Count == stage.Lights.Count && Phases.Count == stage.Phases.Count &&
+      Lights.Select((light, i) => light.Equals(stage.Lights[i])).All(x => x) &&
+      Phases.Select((phase, i) => phase.Equals(stage.Phases[i])).All(x => x);
     }
   }
 }

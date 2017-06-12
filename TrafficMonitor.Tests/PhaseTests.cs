@@ -1,43 +1,48 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 
 namespace TrafficMonitor.Tests
 {
   [TestFixture]
   class PhaseTests
   {
-    [TestCase(10, TestName = "EastEast")]
-    [TestCase(2, TestName = "NorthEast")]
-    [TestCase(3, TestName = "SouthEast")]
-    public void DirectionUponCreation_GivenDirectionsArgument_ExpectSame(Direction direction)
-    {
-      //Arrange
-      var phase = new Phase(direction);
-
-      //Act && Assert
-      Assert.IsTrue(phase.Direction == direction);
-      Assert.IsTrue(phase.PhaseName == (PhaseName)direction);
-    }
-
-    [TestCase(Direction.EastEast, TestName = "EastEast")]
-    [TestCase(Direction.NorthEast, TestName = "NorthEast")]
-    [TestCase(Direction.SouthEast, TestName = "SouthEast")]
-    public void IsActive_UponCreation_ShouldBeFalse(Direction direction)
-    {
-      //Arrange && Act && Assert
-      Assert.IsTrue(new Phase(direction).IsActive == false);
-    }
-
-    [TestCase(10, TestName = "EastEast")]
-    [TestCase(2, TestName = "NorthEast")]
-    [TestCase(3, TestName = "SouthEast")]
-    public void DirectionsUponCreation_GivenPhaseNameArgument_ExpectResult(PhaseName phaseName)
+    [TestCase(PhaseName.A, new[] {Direction.NorthWest, Direction.NorthEast, Direction.NorthNorth}, TestName = "From_North")]
+    [TestCase(PhaseName.B, new[] { Direction.SouthEast, Direction.SouthWest, Direction.SouthSouth }, TestName = "From_South")]
+    [TestCase(PhaseName.C, new[] { Direction.WestSouth, Direction.WestWest, Direction.WestNorth }, TestName = "From_West")]
+    [TestCase(PhaseName.D, new[] { Direction.EastEast, Direction.EastNorth, Direction.EastSouth }, TestName = "From_East")]
+    public void DirectionUponCreation_GivenDirectionsArgument_ExpectSame(PhaseName phaseName, IEnumerable<Direction> directions)
     {
       //Arrange
       var phase = new Phase(phaseName);
 
       //Act && Assert
-      Assert.IsTrue(phase.Direction == (Direction)phaseName);
+      Assert.IsTrue(phase.Directions.All(direction => directions.Contains(direction)));
       Assert.IsTrue(phase.PhaseName == phaseName);
+    }
+
+    [TestCase(PhaseName.A, TestName = "From_North")]
+    [TestCase(PhaseName.B, TestName = "From_South")]
+    [TestCase(PhaseName.C, TestName = "From_West")]
+    [TestCase(PhaseName.D, TestName = "From_East")]
+    public void IsActive_UponCreation_ShouldBeFalse(PhaseName phaseName)
+    {
+      //Arrange && Act && Assert
+      Assert.IsTrue(new Phase(phaseName).IsActive == false);
+    }
+
+    [Test]
+    public void Equals_GivenSamePhase_ExpectTrue()
+    {
+      //Arrange && Act && Assert
+      Assert.IsTrue(new Phase(PhaseName.A).Equals(new Phase(PhaseName.A)));
+    }
+
+    [Test]
+    public void Equals_GivenDifferentPhase_ExpectFalse()
+    {
+      //Arrange && Act && Assert
+      Assert.IsFalse(new Phase(PhaseName.A).Equals(new Phase(PhaseName.B)));
     }
   }
 }

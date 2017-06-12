@@ -26,6 +26,20 @@ namespace TrafficMonitor.Tests
     {
       //Arrange && Act && Assert
       Assert.IsNull(new Light(Colour.Green, new Position(0)).Twin);
-    } 
+    }
+
+    [Test]
+    public void Equals_GivenSameLight_ExpectTrue()
+    {
+      //Assert
+      Assert.IsTrue(new Light(Colour.Red, new Position(0)).Equals(new Light(Colour.Red, new Position(0))));
+    }
+
+    [Test]
+    public void Equals_GivenOtherLight_ExpectFalse()
+    {
+      //Assert
+      Assert.IsFalse(new Light(Colour.Red, new Position(0)).Equals(new Light(Colour.Red, new Position(1))));
+    }
   }
 }
