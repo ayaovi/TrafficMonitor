@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace TrafficMonitor.Tests
@@ -35,15 +34,16 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(new Stage().Phases.Count == 0);
     }
 
-    [Test]
-    public void Phases_GivenStageOne_ExpectFour()
+    [TestCase(1, 4)]
+    [TestCase(2, 4)]
+    public void Phases_GivenCertainStage_ExpectAppropriateNumberOfPhases(int stageIndex, int numberOfPhases)
     {
       //Arrange && Act && Assert
-      Assert.IsTrue(new Stage(1).Phases.Count == 4);
+      Assert.IsTrue(new Stage(stageIndex).Phases.Count == numberOfPhases);
     }
 
     [Test]
-    public void Activate_GivenStateOne_ExpectLightsZeroAndThreeBeGreen()
+    public void Activate_GivenStateOne_ExpectOnlyLightsZeroAndThreeBeGreen()
     {
       //Arrange
       var stage = new Stage(1);
@@ -58,48 +58,22 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(stage.Lights[3].Colour == Colour.Green);
       Assert.IsTrue(stage.IsActive);
     }
-  }
 
-  internal class Stage
-  {
-    public IList<Light> Lights { get; }
-    public IList<Phase> Phases { get; }
-    public bool IsActive { get; set; }
-
-    public Stage()
+    [Test]
+    public void Activate_GivenStateTwo_ExpectOnlyLightOneAndTwoBeGreen()
     {
-      Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
-      Phases = new List<Phase>();
-    }
+      //Arrange
+      var stage = new Stage(2);
 
-    public Stage(int number) : this()
-    {
-      switch (number)
-      {
-        case 1:
-          Phases.Add(new Phase(PhaseName.A));
-          Phases.Add(new Phase(PhaseName.B));
-          Phases.Add(new Phase(PhaseName.D));
-          Phases.Add(new Phase(PhaseName.E));
-          break;
-      }
-    }
+      //Act
+      stage.Activate();
 
-    public void Activate()
-    {
-      foreach (var light in Lights)
-      {
-        light.Colour = Colour.Red;
-      }
-
-      foreach (var phase in Phases)
-      {
-          if (phase.Direction.ToString().StartsWith("North")) Lights[0].Colour = Colour.Green;
-          else if (phase.Direction.ToString().StartsWith("East")) Lights[1].Colour = Colour.Green;
-          else if (phase.Direction.ToString().StartsWith("West")) Lights[2].Colour = Colour.Green;
-          else if (phase.Direction.ToString().StartsWith("South")) Lights[3].Colour = Colour.Green;
-      }
-      IsActive = true;
+      //Assert
+      Assert.IsTrue(stage.Lights[0].Colour == Colour.Red);
+      Assert.IsTrue(stage.Lights[1].Colour == Colour.Green);
+      Assert.IsTrue(stage.Lights[2].Colour == Colour.Green);
+      Assert.IsTrue(stage.Lights[3].Colour == Colour.Red);
+      Assert.IsTrue(stage.IsActive);
     }
   }
 }

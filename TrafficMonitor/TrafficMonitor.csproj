@@ -42,8 +42,11 @@
   <ItemGroup>
     <Compile Include="Colour.cs" />
     <Compile Include="Light.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="Phase.cs" />
+    <Compile Include="PhaseName.cs" />
     <Compile Include="Position.cs" />
-    <Compile Include="State.cs" />
+    <Compile Include="Stage.cs" />
     <Compile Include="TrafficMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
