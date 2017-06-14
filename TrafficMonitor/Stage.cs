@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TrafficMonitor
 {
   public class Stage
   {
-    public IList<Light> Lights { get; }
+    public IList<Light> Lights { get; set; }
     public IList<Phase> Phases { get; }
     public bool IsActive { get; set; }
     public Stage Next { get; set; }
+    public DateTime StartTime { get; set; }
 
     public Stage()
     {
-      Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      //Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      Lights = new List<Light>();
       Phases = new List<Phase>();
     }
 
@@ -31,8 +34,9 @@ namespace TrafficMonitor
       }
     }
 
-    public void Activate()
+    public void Activate(DateTime startTime)
     {
+      StartTime = startTime;
       foreach (var light in Lights)
       {
         light.Colour = Colour.Red;
@@ -50,7 +54,7 @@ namespace TrafficMonitor
 
     public override bool Equals(object obj)
     {
-      // Check for null values and compare run-time types.
+      // Check for null values and compare run-startTime types.
       if (obj == null || GetType() != obj.GetType())
         return false;
 

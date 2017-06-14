@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace TrafficMonitor.Tests
@@ -7,10 +8,31 @@ namespace TrafficMonitor.Tests
   class StageTests
   {
     [Test]
-    public void NumberOfLights_GivenDefaultStage_ExpectEight()
+    public void NumberOfLights_GivenDefaultStage_ExpectFour()
     {
       //Arrange && Act && Assert
-      Assert.IsTrue(new Stage().Lights.Count == 4);
+      Assert.IsTrue(new Stage().Lights.Count == 0);
+    }
+
+    [Test]
+    public void NumberOfLights_GivenThreeLightsArgument_ExpectThree()
+    {
+      //Arrange
+      var lights = new[]
+      {
+        new Light(Colour.Red, new Position(0)),
+        new Light(Colour.Red, new Position(1)),
+        new Light(Colour.Red, new Position(2))
+      };
+      var stage = new Stage
+      {
+        Lights = lights,
+        Next = new Stage(1) { Lights = lights }
+      };
+
+      //Act && Assert
+      Assert.IsTrue(stage.Lights.Count == 3);
+      Assert.IsTrue(stage.Next.Equals(new Stage(1) { Lights = lights }));
     }
 
     [Test]
@@ -47,11 +69,13 @@ namespace TrafficMonitor.Tests
     {
       //Arrange
       var stage = new Stage(0);
+      var startTime = DateTime.Now;
 
       //Act
-      stage.Activate();
+      stage.Activate(startTime);
 
       //Assert
+      Assert.IsTrue(stage.StartTime == startTime);
       Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
       Assert.IsTrue(stage.IsActive);
     }
@@ -60,10 +84,18 @@ namespace TrafficMonitor.Tests
     public void Activate_GivenStateOne_ExpectOnlyLightsZeroAndThreeBeGreen()
     {
       //Arrange
-      var stage = new Stage(1);
-      
+      var stage = new Stage(1)
+      {
+        Lights =
+          new[]
+          {
+            new Light(Colour.Red, new Position(0)), new Light(Colour.Red, new Position(1)),
+            new Light(Colour.Red, new Position(2)), new Light(Colour.Red, new Position(3))
+          }
+      };
+
       //Act
-      stage.Activate();
+      stage.Activate(DateTime.Now);
 
       //Assert
       Assert.IsTrue(stage.Lights[0].Colour == Colour.Green);
@@ -77,10 +109,18 @@ namespace TrafficMonitor.Tests
     public void Activate_GivenStateTwo_ExpectOnlyLightOneAndTwoBeGreen()
     {
       //Arrange
-      var stage = new Stage(2);
+      var stage = new Stage(2)
+      {
+        Lights =
+          new[]
+          {
+            new Light(Colour.Red, new Position(0)), new Light(Colour.Red, new Position(1)),
+            new Light(Colour.Red, new Position(2)), new Light(Colour.Red, new Position(3))
+          }
+      };
 
       //Act
-      stage.Activate();
+      stage.Activate(DateTime.Now);
 
       //Assert
       Assert.IsTrue(stage.Lights[0].Colour == Colour.Red);
