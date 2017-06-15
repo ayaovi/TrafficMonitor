@@ -11,12 +11,14 @@ namespace TrafficMonitor
     public bool IsActive { get; set; }
     public Stage Next { get; set; }
     public DateTime StartTime { get; set; }
+    public IList<int> Duration { get; set; }
 
     public Stage()
     {
       //Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
       Lights = new List<Light>();
       Phases = new List<Phase>();
+      Duration = new List<int> { 3 };
     }
 
     public Stage(int number) : this()
@@ -26,10 +28,12 @@ namespace TrafficMonitor
         case 1:
           Phases.Add(new Phase(PhaseName.A));
           Phases.Add(new Phase(PhaseName.B));
+          Duration = new List<int> {15, 5};
           break;
         case 2:
           Phases.Add(new Phase(PhaseName.C));
           Phases.Add(new Phase(PhaseName.D));
+          Duration = new List<int> { 15, 5 };
           break;
       }
     }

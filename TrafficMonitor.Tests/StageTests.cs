@@ -15,15 +15,34 @@ namespace TrafficMonitor.Tests
     }
 
     [Test]
+    public void Duration_GivenDefaultStage_ExpectThree()
+    {
+      //Arrange
+      var stage = new Stage();
+
+      //Arrange && Act && Assert
+      Assert.IsTrue(stage.Duration.Count == 1);
+      Assert.IsTrue(stage.Duration[0] == 3);
+    }
+
+    [TestCase(1, TestName = "StageOne")]
+    [TestCase(2, TestName = "StageTwo")]
+    public void Duration_GivenNonIdleStages_ExpectFithteenAndFive(int index)
+    {
+      //Arrange
+      var stage = new Stage(index);
+
+      //Arrange && Act && Assert
+      Assert.IsTrue(stage.Duration.Count == 2);
+      Assert.IsTrue(stage.Duration[0] == 15);
+      Assert.IsTrue(stage.Duration[1] == 5);
+    }
+
+    [Test]
     public void NumberOfLights_GivenThreeLightsArgument_ExpectThree()
     {
       //Arrange
-      var lights = new[]
-      {
-        new Light(Colour.Red, new Position(0)),
-        new Light(Colour.Red, new Position(1)),
-        new Light(Colour.Red, new Position(2))
-      };
+      var lights = Enumerable.Range(0, 3).Select(i => new Light(Colour.Red, new Position(i))).ToList();
       var stage = new Stage
       {
         Lights = lights,
@@ -86,12 +105,7 @@ namespace TrafficMonitor.Tests
       //Arrange
       var stage = new Stage(1)
       {
-        Lights =
-          new[]
-          {
-            new Light(Colour.Red, new Position(0)), new Light(Colour.Red, new Position(1)),
-            new Light(Colour.Red, new Position(2)), new Light(Colour.Red, new Position(3))
-          }
+        Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList()
       };
 
       //Act
@@ -111,12 +125,7 @@ namespace TrafficMonitor.Tests
       //Arrange
       var stage = new Stage(2)
       {
-        Lights =
-          new[]
-          {
-            new Light(Colour.Red, new Position(0)), new Light(Colour.Red, new Position(1)),
-            new Light(Colour.Red, new Position(2)), new Light(Colour.Red, new Position(3))
-          }
+        Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList()
       };
 
       //Act

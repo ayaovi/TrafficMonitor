@@ -46,7 +46,9 @@
     <Compile Include="Phase.cs" />
     <Compile Include="PhaseName.cs" />
     <Compile Include="Position.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Stage.cs" />
+    <Compile Include="TrafficEvent.cs" />
     <Compile Include="TrafficMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

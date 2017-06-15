@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace TrafficMonitor.Tests
@@ -21,19 +22,8 @@ namespace TrafficMonitor.Tests
     public void Process_GivenEvent_ExpectSuccess()
     {
       //Arrange
-      var lights = new[]
-      {
-        new Light(Colour.Red, new Position(0)),
-        new Light(Colour.Red, new Position(1)),
-        new Light(Colour.Red, new Position(2))
-      };
-
-      var stages = new[]
-      {
-        new Stage {Lights = lights},
-        new Stage(1) {Lights = lights},
-        new Stage(2) {Lights = lights}
-      };
+      var lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      var stages = Enumerable.Range(0, 3).Select(i => new Stage(i) {Lights = lights}).ToList();
 
       stages[0].Next = stages[1];
       stages[1].Next = stages[2];
@@ -47,27 +37,6 @@ namespace TrafficMonitor.Tests
 
       //Assert
       Assert.IsTrue(stages[0].IsActive);
-    }
-  }
-
-  internal class TrafficEvent
-  {
-    public TrafficEvent(DateTime time, Stage stage, Action<Stage> callback)
-    {
-      Time = time;
-      Stage = stage;
-      CallBack = callback;
-    }
-
-    public Stage Stage { get; set; }
-
-    public Action<Stage> CallBack { get; set; }
-
-    public DateTime Time { get; }
-
-    public void Process()
-    {
-      CallBack(Stage);
     }
   }
 }
