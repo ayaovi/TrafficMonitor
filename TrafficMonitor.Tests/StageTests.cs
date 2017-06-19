@@ -22,8 +22,112 @@ namespace TrafficMonitor.Tests
 
       //Arrange && Act && Assert
       Assert.IsTrue(stage.Duration.Count == 1);
-      Assert.IsTrue(stage.Duration[0] == 3);
+      Assert.IsTrue(stage.Duration[0] == new TimeSpan(3));
     }
+
+
+    [Test]
+    public void GoGreen_GivenActivatedStageOne_ExpectLightsZeroAndThreeGreen()
+    {
+      //Arrange
+      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = true };
+
+      //Act
+      stage.GoGreen(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights[0].Colour == Colour.Green);
+      Assert.IsTrue(stage.Lights[1].Colour == Colour.Red);
+      Assert.IsTrue(stage.Lights[2].Colour == Colour.Red);
+      Assert.IsTrue(stage.Lights[3].Colour == Colour.Green);
+    }
+
+    [Test]
+    public void GoGreen_GivenDeactivatedStageOne_ExpectAllLightsRed()
+    {
+      //Arrange
+      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList() };
+
+      //Act
+      stage.GoGreen(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
+    }
+
+    [TestCase(true, TestName = "Activated")]
+    [TestCase(true, TestName = "Deactivated")]
+    public void GoGreen_GivenActivatedStageZero_ExpectALlLightsRed(bool activation)
+    {
+      //Arrange
+      var stage = new Stage { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = activation };
+
+      //Act
+      stage.GoGreen(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
+    }
+
+    [TestCase(true, TestName = "Activated")]
+    [TestCase(true, TestName = "Deactivated")]
+    public void GoYellow_GivenActivatedStageZero_ExpectALlLightsRed(bool activation)
+    {
+      //Arrange
+      var stage = new Stage { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = activation };
+
+      //Act
+      stage.GoYellow(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
+    }
+
+
+    [Test]
+    public void GoYellow_GivenDeactivatedStageOne_ExpectAllLightsRed()
+    {
+      //Arrange
+      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList() };
+
+      //Act
+      stage.GoYellow(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights.All(light => light.Colour == Colour.Red));
+    }
+
+
+    [Test]
+    public void GoYellow_GivenActivatedStageOne_ExpectLightsZeroAndThreeBeYellow()
+    {
+      //Arrange
+      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = true };
+
+      //Act
+      stage.GoYellow(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(stage.Lights[0].Colour == Colour.Yellow);
+      Assert.IsTrue(stage.Lights[1].Colour == Colour.Red);
+      Assert.IsTrue(stage.Lights[2].Colour == Colour.Red);
+      Assert.IsTrue(stage.Lights[3].Colour == Colour.Yellow);
+    }
+
+
+    [Test]
+    public void GoYellow_GivenActivatedStageOne_ExpectEventToActivateStageThree()
+    {
+      //Arrange
+      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = true };
+
+      //Act
+      var @event = stage.GoYellow(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(@event.GetType() == typeof(TrafficEvent));
+    }
+
 
     [TestCase(1, TestName = "StageOne")]
     [TestCase(2, TestName = "StageTwo")]
@@ -34,8 +138,8 @@ namespace TrafficMonitor.Tests
 
       //Arrange && Act && Assert
       Assert.IsTrue(stage.Duration.Count == 2);
-      Assert.IsTrue(stage.Duration[0] == 15);
-      Assert.IsTrue(stage.Duration[1] == 5);
+      Assert.IsTrue(stage.Duration[0] == new TimeSpan(15));
+      Assert.IsTrue(stage.Duration[1] == new TimeSpan(5));
     }
 
     [Test]
@@ -137,6 +241,25 @@ namespace TrafficMonitor.Tests
       Assert.IsTrue(stage.Lights[2].Colour == Colour.Green);
       Assert.IsTrue(stage.Lights[3].Colour == Colour.Red);
       Assert.IsTrue(stage.IsActive);
+    }
+
+    [Test]
+    public void Activate_GivenStageZero_ExpectEventToActivateStageOne()
+    {
+      //Arrange
+      var lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      var stages = Enumerable.Range(0, 3).Select(i => new Stage(i) { Lights = lights }).ToList();
+
+      stages[0].Next = stages[1];
+      stages[1].Next = stages[2];
+      stages[2].Next = stages[0];
+
+      //Act
+      var @event = stages[0].Activate(DateTime.Now);
+
+      //Assert
+      Assert.IsTrue(@event.Stage.Equals(stages[1]));
+      Assert.IsTrue(@event.Time == stages[0].StartTime.Add(stages[0].Duration[0]));
     }
 
     [Test]

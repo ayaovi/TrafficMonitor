@@ -12,7 +12,7 @@ namespace TrafficMonitor.Tests
     {
       //Arrange
       var time = DateTime.Now;
-      var @event = new TrafficEvent(time, new Stage(), stage => { stage.Activate(time); });
+      var @event = new TrafficEvent(time, new Stage(), stage => stage.Activate(time));
 
       //Act && Assert
       Assert.IsTrue(@event.Time == time);
@@ -30,7 +30,7 @@ namespace TrafficMonitor.Tests
       stages[2].Next = stages[0];
 
       var time = DateTime.Now;
-      var @event = new TrafficEvent(time, stages[0], stage => { stage.Activate(time); });
+      var @event = new TrafficEvent(time, stages[0], stage => stage.Activate(time));
 
       //Act
       @event.Process();

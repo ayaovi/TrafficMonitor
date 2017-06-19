@@ -14,12 +14,7 @@ namespace TrafficMonitor
     public TrafficMonitor()
     {
       Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
-      Stages = new List<Stage>
-      {
-        new Stage {Lights = Lights},
-        new Stage(1) {Lights = Lights},
-        new Stage(2) {Lights = Lights}
-      };
+      Stages = Enumerable.Range(0, 3).Select(i => new Stage(i) { Lights = Lights }).ToList();
 
       Stages[0].Next = Stages[1];
       Stages[1].Next = Stages[2];
@@ -30,7 +25,7 @@ namespace TrafficMonitor
 
     public void Start()
     {
-      EventQueue.Add(new TrafficEvent(SystemTime, new Stage(), stage => { stage.Activate(SystemTime); }));
+      EventQueue.Add(new TrafficEvent(SystemTime, new Stage(), stage => stage.Activate(SystemTime)));
     }
   }
 }
