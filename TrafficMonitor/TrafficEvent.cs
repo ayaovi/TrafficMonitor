@@ -4,9 +4,10 @@ namespace TrafficMonitor
 {
   public class TrafficEvent : IComparable <TrafficEvent>
   {
-    public TrafficEvent(DateTime time, Stage stage, Func<Stage, TrafficEvent> callback)
+    public TrafficEvent(DateTime time, TimeSpan span, Stage stage, Func<Stage, TrafficEvent> callback)
     {
       Time = time;
+      Span = span;
       Stage = stage;
       CallBack = callback;
     }
@@ -16,6 +17,7 @@ namespace TrafficMonitor
     public Func<Stage, TrafficEvent> CallBack { get; set; }
 
     public DateTime Time { get; }
+    public TimeSpan Span { get; set; }
 
     public TrafficEvent Process()
     {

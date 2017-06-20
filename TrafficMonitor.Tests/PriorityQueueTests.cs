@@ -20,7 +20,7 @@ namespace TrafficMonitor.Tests
       //Arrange
       var queue = new PriorityQueue<TrafficEvent>();
       var time = DateTime.Now;
-      var @event = new TrafficEvent(time, new Stage(), stage => stage.Activate(time));
+      var @event = new TrafficEvent(time, new TimeSpan(3), new Stage(), stage => stage.Activate(time));
 
       //Act
       queue.Add(@event);
@@ -35,7 +35,7 @@ namespace TrafficMonitor.Tests
       //Arrange
       var queue = new PriorityQueue<TrafficEvent>();
       var time = DateTime.Now;
-      var @event = new TrafficEvent(time, new Stage(), stage => stage.Activate(time));
+      var @event = new TrafficEvent(time, new TimeSpan(3), new Stage(), stage => stage.Activate(time));
 
       //Act
       queue.Add(@event);
@@ -52,8 +52,8 @@ namespace TrafficMonitor.Tests
       //Arrange
       var queue = new PriorityQueue<TrafficEvent>();
       var time = DateTime.Now;
-      var @event = new TrafficEvent(time, new Stage(), stage => stage.Activate(time));
-      var event1 = new TrafficEvent(new DateTime(30), new Stage(1), stage => stage.Activate(time));
+      var @event = new TrafficEvent(time, new TimeSpan(3), new Stage(), stage => stage.Activate(time));
+      var event1 = new TrafficEvent(new DateTime(30), new TimeSpan(3), new Stage(1), stage => stage.Activate(time));
 
       //Act
       queue.Add(@event);

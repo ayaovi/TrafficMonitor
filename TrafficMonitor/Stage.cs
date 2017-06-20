@@ -42,7 +42,7 @@ namespace TrafficMonitor
     {
       StartTime = startTime;
       IsActive = true;
-      return Phases.Count == 0 ? new TrafficEvent(StartTime.Add(Duration[0]), Next, stage => stage.Activate(StartTime.Add(Duration[0]))) : GoGreen(StartTime);
+      return Phases.Count == 0 ? new TrafficEvent(StartTime.Add(Duration[0]), Next.Duration[0], Next, stage => stage.Activate(StartTime.Add(Duration[0]))) : GoGreen(StartTime);
     }
 
     public override bool Equals(object obj)
@@ -62,7 +62,7 @@ namespace TrafficMonitor
       if (Phases.Count == 0 || !IsActive || time < StartTime) return null;
       {
         _changeColour(Colour.Green);
-        return new TrafficEvent(time.Add(Duration[1]), this, stage => stage.GoYellow(StartTime.Add(Duration[0])));
+        return new TrafficEvent(time.Add(Duration[0]), Duration[1], this, stage => stage.GoYellow(StartTime.Add(Duration[0])));
       }
     }
 
@@ -71,7 +71,7 @@ namespace TrafficMonitor
       if (Phases.Count == 0 || !IsActive || time < StartTime) return null;
       {
         _changeColour(Colour.Yellow);
-        return new TrafficEvent(time.Add(Duration[1]), Next, stage => stage.Activate(StartTime.Add(Duration[0] + Duration[1])));
+        return new TrafficEvent(time.Add(Duration[1]), Next.Duration[0], Next, stage => stage.Activate(StartTime.Add(Duration[0] + Duration[1])));
       }
     }
 

@@ -102,7 +102,13 @@ namespace TrafficMonitor.Tests
     public void GoYellow_GivenActivatedStageOne_ExpectLightsZeroAndThreeBeYellow()
     {
       //Arrange
-      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = true };
+      var lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      var stage = new Stage(1)
+      {
+        Lights = lights,
+        IsActive = true,
+        Next = new Stage { Lights = lights }
+      };
 
       //Act
       stage.GoYellow(DateTime.Now);
@@ -119,7 +125,13 @@ namespace TrafficMonitor.Tests
     public void GoYellow_GivenActivatedStageOne_ExpectEventToActivateStageThree()
     {
       //Arrange
-      var stage = new Stage(1) { Lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList(), IsActive = true };
+      var lights = Enumerable.Range(0, 4).Select(i => new Light(Colour.Red, new Position(i))).ToList();
+      var stage = new Stage(1)
+      {
+        Lights = lights,
+        IsActive = true,
+        Next = new Stage { Lights = lights }
+      };
 
       //Act
       var @event = stage.GoYellow(DateTime.Now);
@@ -191,7 +203,7 @@ namespace TrafficMonitor.Tests
     public void Activate_GivenStateZero_ExpectAllLightShouldBeRed()
     {
       //Arrange
-      var stage = new Stage(0);
+      var stage = new Stage(0) { Next = new Stage(1) };
       var startTime = DateTime.Now;
 
       //Act
@@ -251,7 +263,11 @@ namespace TrafficMonitor.Tests
       var stages = Enumerable.Range(0, 3).Select(i => new Stage(i) { Lights = lights }).ToList();
 
       stages[0].Next = stages[1];
-      stages[1].Next = stages[2];
+      stages[1].Next = new Stage
+      {
+        Lights = lights,
+        Next = stages[2]
+      };
       stages[2].Next = stages[0];
 
       //Act
